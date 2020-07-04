@@ -15,6 +15,7 @@ applicantId = 0
 imageId = 0
 
 def createApplicant():
+# https://developers.sumsub.com/api-reference/#creating-an-applicant
     global applicantId
     body = {"externalUserId": 'SomeUserID',
             "requiredIdDocs": {"docSets": [
@@ -35,6 +36,7 @@ def createApplicant():
 
 
 def addDocument():
+# https://developers.sumsub.com/api-reference/#adding-an-id-document
     global imageId, applicantId
     with open('img.jpg', 'wb') as handle:
         response = requests.get('https://fv2-1.failiem.lv/thumb_show.php?i=gdmn9sqy&view', stream=True)
@@ -58,6 +60,7 @@ def addDocument():
 
 
 def getApplicantStatus():
+# https://developers.sumsub.com/api-reference/#getting-applicant-status-api
     global applicantId
     url =  CONST.SUMSUB_TEST_BASE_URL+'/resources/applicants/'+applicantId+'/requiredIdDocsStatus'
     resp = sign_request(requests.Request('GET', url))
@@ -86,7 +89,10 @@ def sign_request(request: requests.Request) -> requests.PreparedRequest:
     prepared_request.headers['X-App-Access-Ts'] = str(now)
     prepared_request.headers['X-App-Access-Sig'] = signature.hexdigest()
     return prepared_request
-
+ # Such actions are presented below:
+ # 1) Creating an applicant
+ # 2) Adding a document to the applicant
+ # 3) Getting applicant status
 createApplicant()
 addDocument()
 getApplicantStatus()
