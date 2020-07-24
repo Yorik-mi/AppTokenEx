@@ -68,6 +68,22 @@ def getApplicantStatus():
     ourresponse = s.send(resp)
     print(ourresponse.text)
 
+def getAccessToken():
+# https://developers.sumsub.com/api-reference/#access-tokens-for-sdks
+    global applicantId
+    params = {"userId": applicantId, "ttlInSecs": '600'}
+    headers = {'Content-Type': 'application/json',
+               'Content-Encoding': 'utf-8'
+               }
+    resp = sign_request(requests.Request('POST', CONST.SUMSUB_TEST_BASE_URL+'/resources/accessTokens',
+                                         params=params,
+                                         headers=headers
+                                         ))
+    s = requests.Session()
+    ourresponse = s.send(resp)
+    print(ourresponse.text)
+    token = (ourresponse.json()['token'])
+    print('Token:', token)
 
 def sign_request(request: requests.Request) -> requests.PreparedRequest:
     prepared_request = request.prepare()
@@ -89,11 +105,13 @@ def sign_request(request: requests.Request) -> requests.PreparedRequest:
     prepared_request.headers['X-App-Access-Ts'] = str(now)
     prepared_request.headers['X-App-Access-Sig'] = signature.hexdigest()
     return prepared_request
+
  # Such actions are presented below:
  # 1) Creating an applicant
  # 2) Adding a document to the applicant
  # 3) Getting applicant status
+ # 4) Getting access token
 createApplicant()
 addDocument()
 getApplicantStatus()
-
+getAccessToken()
